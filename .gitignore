@@ -1,0 +1,9 @@
+# Diretórios de dados do Oracle
+data/
+
+# Arquivos de ambiente
+.env
+
+# Logs
+*.log
+

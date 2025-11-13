@@ -1,0 +1,45 @@
+services:
+  oracle19c:
+    image: laynerain/oracle19c:19.3.0
+    container_name: oracle19c
+    hostname: oracle19c
+    restart: unless-stopped
+    
+    ports:
+        - "${ORACLE_PORT:-1521}:1521"
+        - "${EM_PORT:-5500}:5500"
+    
+    environment:
+        - ORACLE_SID=${ORACLE_SID:-ORCLCDB}
+        - ORACLE_PDB=${ORACLE_PDB:-ORCLPDB1}
+        - ORACLE_PWD=${ORACLE_PWD}
+        - ORACLE_EDITION=${ORACLE_EDITION:-standard}
+        - ORACLE_CHARACTERSET=${ORACLE_CHARACTERSET:-AL32UTF8}
+        - TZ=${TZ:-America/Sao_Paulo}
+    
+    volumes:
+        - ./data/oradata:/opt/oracle/oradata
+        - ./data/diag:/opt/oracle/diag
+    
+    deploy:
+        resources:
+            limits:
+                memory: ${MEMORY_LIMIT:-2g}
+                cpus: '${CPUS_LIMIT:-2}'
+            reservations:
+                memory: ${MEMORY_RESERVATION:-1g}
+                cpus: '${CPUS_RESERVATION:-1}'
+    
+    healthcheck:
+        test: ["CMD-SHELL", "healthcheck.sh"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+        start_period: 120s
+    
+    networks:
+        - oracle-network
+
+networks:
+  oracle-network:
+    driver: bridge
