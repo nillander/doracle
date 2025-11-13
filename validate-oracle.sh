@@ -121,11 +121,13 @@ echo ""
 if [ "$HEALTH" = "healthy" ]; then
     echo -e "${GREEN}=========================================="
     echo "✓ Oracle está funcionando corretamente!"
+    echo "   Status de saúde: $HEALTH"
     echo "==========================================${NC}"
     exit 0
 else
     echo -e "${YELLOW}=========================================="
     echo "⚠ Oracle ainda está inicializando..."
+    echo "   Status de saúde: $HEALTH"
     echo "   Aguarde alguns minutos e execute novamente"
     echo "   Monitore os logs com: docker compose logs -f oracle19c"
     echo "==========================================${NC}"
