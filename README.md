@@ -73,6 +73,18 @@ Edite o arquivo `.env` para personalizar as configurações:
 docker compose up -d
 ```
 
+## 🛠️ Construção e Inicialização do Container
+
+Siga esta sequência para criar o banco do zero:
+
+1. **Configurar variáveis:** `cp env.example .env` e ajuste `ORACLE_PWD`, portas e limites.
+2. **Ajustar permissões dos dados:** `sudo chown -R 54321:54321 data/ && sudo chmod -R 755 data/`.
+3. **Scripts de bootstrap:** mantenha a pasta `scripts/` (montada em `/opt/oracle/scripts`). O SQL `scripts/startup/disable_maintenance_plan.sql` desabilita as janelas de manutenção e remove o plano `DEFAULT_MAINTENANCE_PLAN`, evitando mensagens constantes nos logs.
+4. **Subir o container:** `docker compose up -d`.
+5. **Validar:** execute `./validate-oracle.sh` e confirme que o status está `healthy`, o listener responde e a conexão SQL*Plus passa.
+
+> Para reconstruir tudo de maneira automatizada, use `sudo ./reset-oracle.sh`, que aplica todos os passos acima e acompanha os logs até o banco ficar pronto.
+
 ### Parar o Oracle
 
 ```bash
@@ -133,6 +145,10 @@ O script:
 3. Ajusta permissões
 4. Inicia o Oracle novamente
 5. Monitora os logs
+
+### `scripts/startup/disable_maintenance_plan.sql`
+
+Executado automaticamente a cada inicialização (via `/opt/oracle/scripts/startup`). Ele desabilita todas as janelas padrão (`MONDAY_WINDOW`, `WEEKEND_WINDOW`, etc.), força o grupo `SYS.MAINTENANCE_WINDOW_GROUP` a permanecer desligado e zera `RESOURCE_MANAGER_PLAN`, evitando que o Resource Manager padrão seja aplicado e que novas mensagens “Setting Resource Manager plan...” apareçam nos logs.
 
 ## ✅ Validação
 
@@ -329,4 +345,3 @@ Este projeto utiliza a imagem Docker `laynerain/oracle19c:19.3.0`. Consulte os t
 ---
 
 **Nota:** Este é um ambiente de desenvolvimento/testes. Para ambientes de produção, considere configurações adicionais de segurança, backup e monitoramento.
-

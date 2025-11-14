@@ -27,9 +27,15 @@ else
 fi
 echo ""
 
+CONTAINER_ID=$(docker compose ps -q oracle19c 2>/dev/null || true)
+if [ -z "$CONTAINER_ID" ]; then
+    echo -e "${RED}✗ Não foi possível identificar o container do Oracle via docker compose${NC}"
+    exit 1
+fi
+
 # 2. Verificar healthcheck
 echo "2. Verificando healthcheck..."
-HEALTH=$(docker inspect oracle19c --format='{{.State.Health.Status}}' 2>/dev/null || echo "none")
+HEALTH=$(docker inspect "$CONTAINER_ID" --format='{{.State.Health.Status}}' 2>/dev/null || echo "none")
 if [ "$HEALTH" = "healthy" ]; then
     echo -e "${GREEN}✓ Container está saudável${NC}"
 elif [ "$HEALTH" = "starting" ]; then
@@ -133,4 +139,3 @@ else
     echo "==========================================${NC}"
     exit 0
 fi
-
