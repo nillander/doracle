@@ -39,8 +39,8 @@ services:
         start_period: 120s
     
     networks:
-        - oracle-network
+        - databases
 
 networks:
-  oracle-network:
-    driver: bridge
+  databases:
+    external: true
