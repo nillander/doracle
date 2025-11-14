@@ -190,7 +190,7 @@ Sinais de que ainda está inicializando:
 - **Usuários:** 
   - `sys` (como sysdba)
   - `system`
-  - `pdbadmin` (para PDB)
+- `pdbadmin` (para PDB)
 - **Senha:** (valor definido em `ORACLE_PWD` no arquivo `.env`)
 
 ### Exemplo de Conexão SQL*Plus
@@ -204,6 +204,20 @@ Dentro do SQL*Plus:
 SELECT 'Oracle está funcionando!' FROM DUAL;
 EXIT;
 ```
+
+### Exemplo de Conexão no DataGrip
+
+1. `Connection type`: **Service Name**
+2. `Host`: `localhost`
+3. `Port`: `1521`
+4. `Service`: `ORCLPDB1`
+5. `Driver`: `Thin`
+6. `Authentication`: `User & Password`
+7. `User`: `pdbadmin` (ou `sys` como SYSDBA, `system`, etc.)
+8. `Password`: valor de `ORACLE_PWD`
+9. O URL gerado fica `jdbc:oracle:thin:@//localhost:1521/ORCLPDB1`
+
+![Configuração DataGrip](datagrip.png)
 
 ### Exemplo de Conexão JDBC
 
