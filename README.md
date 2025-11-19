@@ -328,6 +328,35 @@ Procure por mensagens como:
 - ✅ `Listener started` - Listener ativo
 - ❌ `ERROR` ou `DATABASE SETUP WAS NOT SUCCESSFUL` - Problemas
 
+### Problema: Alerta "Your kernel does not support swap limit capabilities"
+
+**Sintoma:**
+```
+WARNING: No swap limit support
+oracle19c Your kernel does not support swap limit capabilities or the cgroup is not mounted. Memory limited without swap.
+```
+
+**Causa:**
+Este alerta é comum no WSL2, especialmente após:
+- Upgrade de hardware (troca de placa mãe, RAM)
+- Atualização do WSL2 ou Docker
+- Mudança para cgroup v2 (padrão em versões mais recentes)
+
+O WSL2 não suporta swap limits nativamente, mesmo que os limites de memória estejam configurados.
+
+**Solução:**
+Este é um **alerta informativo**, não um erro. O limite de memória funciona normalmente, apenas o swap não é limitado. Você pode:
+
+1. **Ignorar o alerta** (recomendado) - O Oracle funciona normalmente com os limites de memória configurados
+2. **Comentar as linhas de memória** no `docker-compose.yml` se o alerta incomodar, mas você perderá o controle de recursos:
+   ```yaml
+   limits:
+       # memory: ${MEMORY_LIMIT:-2g}  # Comentado para evitar alerta
+       cpus: '${CPUS_LIMIT:-2}'
+   ```
+
+**Nota:** Após upgrades de hardware, o WSL2 pode ser reinstalado/atualizado automaticamente, mudando o comportamento do cgroup. Isso é esperado e não afeta o funcionamento do Oracle.
+
 ## 📊 Comandos Úteis
 
 ### Gerenciamento do Container
