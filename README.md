@@ -144,7 +144,27 @@ O script:
 2. Remove todos os dados antigos
 3. Ajusta permissões
 4. Inicia o Oracle novamente
-5. Monitora os logs
+5. Aguarda o Oracle ficar pronto (healthcheck)
+
+### `create-laravel-user.sh`
+
+Script para criar o usuário `laraveldb` e a tabela de teste `usuarios` para desenvolvimento Laravel.
+
+**Uso:**
+```bash
+chmod +x create-laravel-user.sh
+./create-laravel-user.sh
+```
+
+O script:
+1. Verifica se o container está rodando
+2. Verifica se o Oracle está pronto (healthcheck)
+3. Cria o usuário `laraveldb` na PDB `ORCLPDB1`
+4. Cria a tabela `usuarios` de teste
+5. Valida a conexão e a criação dos objetos
+6. Exibe informações de acesso
+
+**Nota:** O script verifica se o usuário/tabela já existem antes de criar, evitando erros em execuções repetidas.
 
 ### `scripts/startup/disable_maintenance_plan.sql`
 
@@ -188,7 +208,7 @@ Sinais de que ainda está inicializando:
 - **Port:** `1521`
 - **SID:** `ORCLCDB`
 - **Service Name:** `ORCLPDB1` (para PDB)
-- **Usuários:** 
+- **Usuários:**
   - `sys` (como sysdba)
   - `system`
 - `pdbadmin` (para PDB)
@@ -223,6 +243,17 @@ EXIT;
 ## 💾 Schema `laraveldb` para o Laravel
 
 ### 1. Criar o usuário e a tabela de teste
+
+**Método recomendado (script automatizado):**
+
+```bash
+chmod +x create-laravel-user.sh
+./create-laravel-user.sh
+```
+
+O script cria automaticamente o usuário `laraveldb` e a tabela `usuarios`, além de validar a conexão.
+
+**Método manual (comandos SQL):**
 
 Execute os comandos abaixo dentro do container (as credenciais usam os valores padrão de `.env.example`):
 
